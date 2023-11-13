@@ -28,10 +28,38 @@ app.post('/create', (req, res) => {
   const sql = "INSERT INTO books (`Name_book`, `Autor`, `Edition_house`) VALUES (?)";
   const values = [
     req.body.nameBook,
-    req.body.edition,
-    req.body.author
+    req.body.author,
+    req.body.edition
   ]
   db.query(sql, [values], (err, data) => {
+    if(err) return res.json("Error");
+    return res.json(data);
+  })
+})
+
+// function pour update un livre
+app.put('/update/:id', (req, res) => {
+  const sql = "update books set `Name_book` = ?, `Autor` = ?, `Edition_house` = ? where id = ?";
+  const values = [
+    req.body.nameBook,
+    req.body.author,
+    req.body.edition
+  ]
+  const id = req.params.id;
+
+  db.query(sql, [...values, id], (err, data) => {
+    if(err) return res.json("Error");
+    return res.json(data);
+  })
+})
+
+// function pour delete un livre
+app.delete('/books/:id', (req, res) => {
+  const sql = "DELETE FROM books WHERE id = ?";
+
+  const id = req.params.id;
+
+  db.query(sql, [id], (err, data) => {
     if(err) return res.json("Error");
     return res.json(data);
   })
